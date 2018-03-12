@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameSvr", "GameSvr\GameSvr.vcxproj", "{6950EBB7-E6F6-4939-9299-5CC63E0B0334}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{283F1FBB-7EF4-4360-86C7-A829B96C0095}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client.vcxproj", "{283F1FBB-7EF4-4360-86C7-A829B96C0095}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,14 +13,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Debug|x64.ActiveCfg = Debug|x64
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Debug|x64.Build.0 = Debug|x64
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Debug|x86.ActiveCfg = Debug|Win32
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Debug|x86.Build.0 = Debug|Win32
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Release|x64.ActiveCfg = Release|x64
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Release|x64.Build.0 = Release|x64
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Release|x86.ActiveCfg = Release|Win32
-		{6950EBB7-E6F6-4939-9299-5CC63E0B0334}.Release|x86.Build.0 = Release|Win32
 		{283F1FBB-7EF4-4360-86C7-A829B96C0095}.Debug|x64.ActiveCfg = Debug|x64
 		{283F1FBB-7EF4-4360-86C7-A829B96C0095}.Debug|x64.Build.0 = Debug|x64
 		{283F1FBB-7EF4-4360-86C7-A829B96C0095}.Debug|x86.ActiveCfg = Debug|Win32
@@ -36,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {87473F40-0A2F-44C7-A414-23880E7CD8A4}
+		SolutionGuid = {AAE689BB-E0DE-4236-8D60-2D905F8394D8}
 	EndGlobalSection
 EndGlobal
