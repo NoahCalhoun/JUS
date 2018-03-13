@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Define.h"
+
 class CGraphicDevice
 {
 public:
@@ -13,8 +15,13 @@ public:
 
 //Field
 private:
-	ID3D11Device * m_pd3dDevice;
-	ID3D11DeviceContext* m_pd3dDeviceContext;
+	ID3D11Device* m_pd3dDevice;						//리소스 생성
+	IDXGISwapChain* m_pDXGISwapChain;				//디스플레이 제어
+	ID3D11DeviceContext* m_pd3dDeviceContext;		//파이프라인 설정
+	ID3D11RenderTargetView* m_pd3dRenderTargetView;	//렌더 타겟 뷰
+
+	int m_iClientWindowWidth;
+	int m_iClientWindowHeight;
 
 //Function
 private:

@@ -7,6 +7,9 @@
     <Filter Include="Main">
       <UniqueIdentifier>{8a282dd9-fd04-49be-b823-345687996970}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Header">
+      <UniqueIdentifier>{6bf91bac-bfaa-442c-9874-ec26f54aad20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -23,6 +26,9 @@
     </ClInclude>
     <ClInclude Include="Codes\GraphicDevice.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>Main\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

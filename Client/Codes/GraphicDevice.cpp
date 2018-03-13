@@ -5,10 +5,27 @@ shared_ptr<CGraphicDevice> CGraphicDevice::mInstance = nullptr;
 
 CGraphicDevice::CGraphicDevice()
 {
+	m_pd3dDevice = NULL;
+	m_pDXGISwapChain = NULL;
+	m_pd3dDeviceContext = NULL;
+	m_pd3dRenderTargetView = NULL;
+
+	m_iClientWindowWidth = CLIENT_WINDOW_WIDTH;
+	m_iClientWindowHeight = CLIENT_WINDOW_HEIGHT;
 }
 
 CGraphicDevice::~CGraphicDevice()
 {
+	if (m_pd3dDeviceContext)
+		m_pd3dDeviceContext->ClearState();
+	if (m_pd3dRenderTargetView)
+		m_pd3dRenderTargetView->Release();
+	if (m_pDXGISwapChain)
+		m_pDXGISwapChain->Release();
+	if (m_pd3dDeviceContext)
+		m_pd3dDeviceContext->Release();
+	if (m_pd3dDevice)
+		m_pd3dDevice->Release();
 }
 
 shared_ptr<CGraphicDevice> CGraphicDevice::GetInstance()
@@ -23,6 +40,13 @@ shared_ptr<CGraphicDevice> CGraphicDevice::GetInstance()
 
 HRESULT CGraphicDevice::InitGraphicDevice()
 {
+	HRESULT hr;
+
+	RECT rc;
+	::GetClientRect(g_hWnd, &rc);
+	m_iClientWindowWidth = rc.right - rc.left;
+	m_iClientWindowHeight = rc.bottom - rc.top;
+
 	UINT dwCreateDeviceFlags = 0;
 #ifdef _DEBUG
 	dwCreateDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -41,6 +65,20 @@ HRESULT CGraphicDevice::InitGraphicDevice()
 	};
 	UINT nFeatureLevels = sizeof(pd3dFeatureLevels) / sizeof(D3D_FEATURE_LEVEL);
 
+	DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
+	::ZeroMemory(&dxgiSwapChainDesc, sizeof(dxgiSwapChainDesc));
+	dxgiSwapChainDesc.BufferCount = 1;
+	dxgiSwapChainDesc.BufferDesc.Width = m_iClientWindowWidth;
+	dxgiSwapChainDesc.BufferDesc.Height = m_iClientWindowHeight;
+	dxgiSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	dxgiSwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+	dxgiSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	dxgiSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	dxgiSwapChainDesc.OutputWindow = g_hWnd;
+	dxgiSwapChainDesc.SampleDesc.Count = 1;
+	dxgiSwapChainDesc.SampleDesc.Quality = 0;
+	dxgiSwapChainDesc.Windowed = true;
+
 	D3D_DRIVER_TYPE nd3dDriverType = D3D_DRIVER_TYPE_NULL;
 	D3D_FEATURE_LEVEL nd3dFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 	
@@ -48,12 +86,40 @@ HRESULT CGraphicDevice::InitGraphicDevice()
 	{
 		nd3dDriverType = d3dDriverTypes[i];
 		
-		if (SUCCEEDED(D3D11CreateDevice(NULL, nd3dDriverType, NULL, dwCreateDeviceFlags, pd3dFeatureLevels, nFeatureLevels
-			, D3D11_SDK_VERSION, &m_pd3dDevice, &nd3dFeatureLevel, &m_pd3dDeviceContext)))
+		if (SUCCEEDED(hr = D3D11CreateDeviceAndSwapChain(
+				NULL,
+				nd3dDriverType,
+				NULL,
+				dwCreateDeviceFlags,
+				pd3dFeatureLevels,
+				nFeatureLevels,
+				D3D11_SDK_VERSION,
+				&dxgiSwapChainDesc,
+				&m_pDXGISwapChain,
+				&m_pd3dDevice,
+				&nd3dFeatureLevel,
+				&m_pd3dDeviceContext
+			)))
 		{
-			return S_OK;
+			break;
 		}
 	}
 
-	return E_FAIL;
+	if (!m_pDXGISwapChain || !m_pd3dDevice || !m_pd3dDeviceContext)
+		return E_FAIL;
+
+	ID3D11Texture2D* pd3dBackBuffer;
+
+	if (FAILED(hr = m_pDXGISwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pd3dBackBuffer)))
+		return E_FAIL;
+
+	if (FAILED(hr = m_pd3dDevice->CreateRenderTargetView(pd3dBackBuffer, NULL, &m_pd3dRenderTargetView)))
+		return E_FAIL;
+
+	if (pd3dBackBuffer)
+		pd3dBackBuffer->Release();
+
+	m_pd3dDeviceContext->OMSetRenderTargets(1, &m_pd3dRenderTargetView, NULL);
+
+	return S_OK;
 }
