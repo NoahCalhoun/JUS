@@ -44,4 +44,5 @@ HWND CLogListBox::CreateListBox(HWND _hwndParent)
 void CLogListBox::AddString(wstring _str)
 {
 	SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str());
+	SendMessage(m_hWnd, LB_SETTOPINDEX, SendMessage(m_hWnd, LB_GETCOUNT, 0, 0) - 1, 0);
 }
