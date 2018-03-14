@@ -151,7 +151,9 @@
   <ItemGroup>
     <ClInclude Include="GameSvr.h" />
     <ClInclude Include="GlobalVar.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="LogCategoryListView.h" />
+    <ClInclude Include="LogListBox.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -159,7 +161,9 @@
   <ItemGroup>
     <ClCompile Include="GameSvr.cpp" />
     <ClCompile Include="GlobalVar.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="LogCategoryListView.cpp" />
+    <ClCompile Include="LogListBox.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
