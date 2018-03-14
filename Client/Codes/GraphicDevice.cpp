@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GraphicDevice.h"
 
-shared_ptr<CGraphicDevice> CGraphicDevice::mInstance = nullptr;
+shared_ptr<CGraphicDevice> CGraphicDevice::m_pInstance = nullptr;
 
 CGraphicDevice::CGraphicDevice()
 {
@@ -16,26 +16,17 @@ CGraphicDevice::CGraphicDevice()
 
 CGraphicDevice::~CGraphicDevice()
 {
-	if (m_pd3dDeviceContext)
-		m_pd3dDeviceContext->ClearState();
-	if (m_pd3dRenderTargetView)
-		m_pd3dRenderTargetView->Release();
-	if (m_pDXGISwapChain)
-		m_pDXGISwapChain->Release();
-	if (m_pd3dDeviceContext)
-		m_pd3dDeviceContext->Release();
-	if (m_pd3dDevice)
-		m_pd3dDevice->Release();
+	ReleaseDevice();
 }
 
 shared_ptr<CGraphicDevice> CGraphicDevice::GetInstance()
 {
-	if (mInstance == nullptr)
+	if (m_pInstance == nullptr)
 	{
-		mInstance = make_shared<CGraphicDevice>();
+		m_pInstance = make_shared<CGraphicDevice>();
 	}
 
-	return mInstance;
+	return m_pInstance;
 }
 
 HRESULT CGraphicDevice::InitGraphicDevice()
@@ -122,4 +113,46 @@ HRESULT CGraphicDevice::InitGraphicDevice()
 	m_pd3dDeviceContext->OMSetRenderTargets(1, &m_pd3dRenderTargetView, NULL);
 
 	return S_OK;
+}
+
+void CGraphicDevice::UpdateDevice()
+{
+	float fClearColor[4] = { 0.f, 0.125f, 0.3f, 1.f };
+	m_pd3dDeviceContext->ClearRenderTargetView(m_pd3dRenderTargetView, fClearColor);
+	m_pDXGISwapChain->Present(0, 0);
+}
+
+void CGraphicDevice::RenewDeviceSize(int _width, int _height)
+{
+	m_iClientWindowWidth = _width;
+	m_iClientWindowHeight = _height;
+
+	m_pd3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
+	if (m_pd3dRenderTargetView)
+		m_pd3dRenderTargetView->Release();
+	m_pDXGISwapChain->ResizeBuffers(2, m_iClientWindowWidth, m_iClientWindowHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+
+	ID3D11Texture2D* pd3dBackBuffer;
+
+	m_pDXGISwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pd3dBackBuffer);
+	m_pd3dDevice->CreateRenderTargetView(pd3dBackBuffer, NULL, &m_pd3dRenderTargetView);
+
+	if (pd3dBackBuffer)
+		pd3dBackBuffer->Release();
+
+	m_pd3dDeviceContext->OMSetRenderTargets(1, &m_pd3dRenderTargetView, NULL);
+}
+
+void CGraphicDevice::ReleaseDevice()
+{
+	if (m_pd3dDeviceContext)
+		m_pd3dDeviceContext->ClearState();
+	if (m_pd3dRenderTargetView)
+		m_pd3dRenderTargetView->Release();
+	if (m_pDXGISwapChain)
+		m_pDXGISwapChain->Release();
+	if (m_pd3dDeviceContext)
+		m_pd3dDeviceContext->Release();
+	if (m_pd3dDevice)
+		m_pd3dDevice->Release();
 }

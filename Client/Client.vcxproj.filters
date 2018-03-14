@@ -10,6 +10,12 @@
     <Filter Include="Main\Header">
       <UniqueIdentifier>{6bf91bac-bfaa-442c-9874-ec26f54aad20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Device">
+      <UniqueIdentifier>{925d66c2-a808-401d-b7da-bf2c0bddeaee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager">
+      <UniqueIdentifier>{10c9886a-9a59-4d8c-a287-38e6e704b752}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -24,11 +30,20 @@
     <ClInclude Include="targetver.h">
       <Filter>Default</Filter>
     </ClInclude>
-    <ClInclude Include="Codes\GraphicDevice.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="Define.h">
       <Filter>Main\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\GraphicDevice.h">
+      <Filter>Main\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\MainApp.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\InputDevice.h">
+      <Filter>Main\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TimeManager.h">
+      <Filter>Main\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -39,7 +54,16 @@
       <Filter>Default</Filter>
     </ClCompile>
     <ClCompile Include="Codes\GraphicDevice.cpp">
+      <Filter>Main\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\MainApp.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\InputDevice.cpp">
+      <Filter>Main\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TimeManager.cpp">
+      <Filter>Main\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

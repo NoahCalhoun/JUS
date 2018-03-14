@@ -9,7 +9,7 @@ public:
 	virtual ~CGraphicDevice();
 
 private:
-	static shared_ptr<CGraphicDevice> mInstance;
+	static shared_ptr<CGraphicDevice> m_pInstance;
 public:
 	static shared_ptr<CGraphicDevice> GetInstance();
 
@@ -24,6 +24,11 @@ private:
 	int m_iClientWindowHeight;
 
 //Function
-private:
+public:
 	HRESULT InitGraphicDevice();
+	void UpdateDevice();
+
+	void RenewDeviceSize(int _width, int _height);
+
+	void ReleaseDevice();
 };
