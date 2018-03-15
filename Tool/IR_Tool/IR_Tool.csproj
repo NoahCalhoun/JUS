@@ -45,15 +45,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="01. Form\BaseForm.cs">
+    <Compile Include="Form\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="01. Form\BaseForm.Designer.cs">
+    <Compile Include="Form\BaseForm.Designer.cs">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="00. Loop\MainLoop.cs" />
+    <Compile Include="Loop\MainLoop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="01. Form\BaseForm.resx">
+    <EmbeddedResource Include="Form\BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -76,7 +76,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="99. Default\App.config" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
