@@ -11,9 +11,14 @@ public:
 private:
 	HWND m_hWnd;
 
+	HFONT m_hFont;
+	INT m_iCurIdx;
+	INT m_iMaxLen;
+
 public:
 	HWND CreateListBox(HWND _hwndParent);
 
-	void AddString(wstring _str);
+	void AddString(STRING _str);
+	void SetHScroll(STRING _str);
 };
 

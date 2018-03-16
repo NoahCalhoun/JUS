@@ -3,6 +3,8 @@
 
 
 CLogListBox::CLogListBox()
+	: m_iCurIdx(0)
+	, m_iMaxLen(0)
 {
 }
 
@@ -25,8 +27,7 @@ HWND CLogListBox::CreateListBox(HWND _hwndParent)
 
 	m_hWnd = CreateWindow(WC_LISTBOX,
 		NULL,
-		WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL |
-		LBS_NOSEL,
+		WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_HSCROLL,
 		iW, 0,
 		iW * 3, iH,
 		_hwndParent,
@@ -34,15 +35,31 @@ HWND CLogListBox::CreateListBox(HWND _hwndParent)
 		g_hInst,
 		NULL);
 
-	for (size_t i = 0; i < 100; i++)
-	{
-	}
+	m_hFont = CreateFont(16, 0, 0, 0
+		, FW_DONTCARE, FALSE, FALSE, FALSE, ANSI_CHARSET
+		, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY
+		, DEFAULT_PITCH | FF_SWISS, _T("Arial"));
+
+	SendMessage(m_hWnd, WM_SETFONT, (WPARAM)m_hFont, 0);
 
 	return m_hWnd;
 }
 
-void CLogListBox::AddString(wstring _str)
+void CLogListBox::AddString(STRING _str)
 {
 	SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str());
-	SendMessage(m_hWnd, LB_SETTOPINDEX, SendMessage(m_hWnd, LB_GETCOUNT, 0, 0) - 1, 0);
+	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx++, 0);
+	
+	SetHScroll(_str);
+}
+
+void CLogListBox::SetHScroll(STRING _str)
+{
+	SIZE sz = { 0, };
+	HDC hdc = GetDC(m_hWnd);
+	SelectObject(hdc, m_hFont);
+	GetTextExtentPoint(hdc, _str.c_str(), _str.length() + 1, &sz);
+	ReleaseDC(m_hWnd, hdc);
+
+	SendMessage(m_hWnd, LB_SETHORIZONTALEXTENT, sz.cx, 0);
 }
