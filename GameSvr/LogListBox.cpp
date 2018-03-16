@@ -45,23 +45,27 @@ HWND CLogListBox::CreateListBox(HWND _hwndParent)
 	return m_hWnd;
 }
 
-void CLogListBox::AddString(STRING _str)
+void CLogListBox::AddString(const STRING& _str)
 {
+	if (m_iCurIdx > LOGLISTBOX_LOG_COUNT_MAX) {
+		SendMessage(m_hWnd, LB_DELETESTRING, 0, 0);
+		m_iCurIdx--;
+	}
+
 	SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str());
 	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx++, 0);
-	
+
 	SetHScroll(_str);
 }
 
-void CLogListBox::SetHScroll(STRING _str)
+void CLogListBox::SetHScroll(const STRING& _str)
 {
 	SIZE sz = { 0, };
 	HDC hdc = GetDC(m_hWnd);
 	SelectObject(hdc, m_hFont);
-	GetTextExtentPoint(hdc, _str.c_str(), _str.length() + 1, &sz);
+	GetTextExtentPoint(hdc, _str.c_str(), (INT)_str.length() + 1, &sz);
 	ReleaseDC(m_hWnd, hdc);
 
 	m_iMaxLen = max(sz.cx, m_iMaxLen);
-
 	SendMessage(m_hWnd, LB_SETHORIZONTALEXTENT, m_iMaxLen, 0);
 }

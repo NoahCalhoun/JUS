@@ -20,10 +20,9 @@ void CLog::Initialize(void)
 
 	m_pListBox = make_shared<CLogListBox>();
 	if (g_hWnd && m_pListBox)	m_pListBox->CreateListBox(g_hWnd);
-	
 }
 
 void CLog::AddLog(wstring _str)
 {
-	m_pListBox->AddString(_str);
+	if (m_pListBox) m_pListBox->AddString(_str);
 }
