@@ -61,5 +61,7 @@ void CLogListBox::SetHScroll(STRING _str)
 	GetTextExtentPoint(hdc, _str.c_str(), _str.length() + 1, &sz);
 	ReleaseDC(m_hWnd, hdc);
 
-	SendMessage(m_hWnd, LB_SETHORIZONTALEXTENT, sz.cx, 0);
+	m_iMaxLen = max(sz.cx, m_iMaxLen);
+
+	SendMessage(m_hWnd, LB_SETHORIZONTALEXTENT, m_iMaxLen, 0);
 }
