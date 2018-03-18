@@ -96,7 +96,7 @@ unsigned long CTimeManager::GetFrameRate(LPTSTR _lpszString, int _nCharacters)
 	if (_lpszString)
 	{
 		_itow_s(m_nCurrentFrameRate, _lpszString, _nCharacters, 10);
-		wcscat_s(_lpszString, _nCharacters, _T(" FPS)"));
+		wcscat_s(_lpszString, _nCharacters, _T(" FPS"));
 	}
 	return m_nCurrentFrameRate;
 }

@@ -16,7 +16,6 @@ CGraphicDevice::CGraphicDevice()
 
 CGraphicDevice::~CGraphicDevice()
 {
-	ReleaseDevice();
 }
 
 shared_ptr<CGraphicDevice> CGraphicDevice::GetInstance()
