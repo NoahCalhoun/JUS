@@ -16,6 +16,15 @@
     <Filter Include="Main\Manager">
       <UniqueIdentifier>{10c9886a-9a59-4d8c-a287-38e6e704b752}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Test">
+      <UniqueIdentifier>{4a2484ce-63a4-4f18-b28d-bc071028aa06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Resources">
+      <UniqueIdentifier>{a6af1237-392f-4c9e-bf2a-aff735c4ede5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Resources\Shader">
+      <UniqueIdentifier>{fdecfb83-d9c1-4802-afa3-d8c2bbab19a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -45,6 +54,18 @@
     <ClInclude Include="Codes\TimeManager.h">
       <Filter>Main\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Codes\TestMesh.h">
+      <Filter>Main\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TestObject.h">
+      <Filter>Main\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TestShader.h">
+      <Filter>Main\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TestScene.h">
+      <Filter>Main\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -65,6 +86,18 @@
     <ClCompile Include="Client.cpp">
       <Filter>Default</Filter>
     </ClCompile>
+    <ClCompile Include="Codes\TestMesh.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TestObject.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TestShader.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TestScene.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -78,5 +111,10 @@
     <ResourceCompile Include="Client.rc">
       <Filter>Default</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shader\Effect.fx">
+      <Filter>Main\Resources\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

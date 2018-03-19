@@ -77,6 +77,8 @@ LRESULT CALLBACK CInputDevice::OnProcessWindowMessage(UINT _nMessageID, WPARAM _
 	{
 		auto graphicDev = CGraphicDevice::GetInstance();
 		graphicDev->RenewDeviceSize(LOWORD(_lParam), HIWORD(_lParam));
+		graphicDev->CreateRenderTargetView();
+		graphicDev->SetViewport();
 	}
 	break;
 

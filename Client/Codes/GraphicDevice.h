@@ -26,9 +26,16 @@ private:
 //Function
 public:
 	HRESULT InitGraphicDevice();
-	void UpdateDevice();
-
 	void RenewDeviceSize(int _width, int _height);
+	void SetViewport();
+	bool CreateRenderTargetView();
 
+	void UpdateDevice();
 	void ReleaseDevice();
+
+//Getter
+	ID3D11Device* GetDevice() { return m_pd3dDevice; }
+	IDXGISwapChain* GetSwapChain() { return m_pDXGISwapChain; }
+	ID3D11DeviceContext* GetDeviceContext() { return m_pd3dDeviceContext; }
+	ID3D11RenderTargetView* GetRenderTargetView() { return m_pd3dRenderTargetView; }
 };

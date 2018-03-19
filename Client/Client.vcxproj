@@ -75,16 +75,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -159,6 +159,10 @@
     <ClInclude Include="Codes\GraphicDevice.h" />
     <ClInclude Include="Codes\InputDevice.h" />
     <ClInclude Include="Codes\MainApp.h" />
+    <ClInclude Include="Codes\TestMesh.h" />
+    <ClInclude Include="Codes\TestObject.h" />
+    <ClInclude Include="Codes\TestScene.h" />
+    <ClInclude Include="Codes\TestShader.h" />
     <ClInclude Include="Codes\TimeManager.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Resource.h" />
@@ -170,6 +174,10 @@
     <ClCompile Include="Codes\GraphicDevice.cpp" />
     <ClCompile Include="Codes\InputDevice.cpp" />
     <ClCompile Include="Codes\MainApp.cpp" />
+    <ClCompile Include="Codes\TestMesh.cpp" />
+    <ClCompile Include="Codes\TestObject.cpp" />
+    <ClCompile Include="Codes\TestScene.cpp" />
+    <ClCompile Include="Codes\TestShader.cpp" />
     <ClCompile Include="Codes\TimeManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -184,6 +192,13 @@
   <ItemGroup>
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shader\Effect.fx">
+      <DeploymentContent>true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

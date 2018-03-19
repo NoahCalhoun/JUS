@@ -98,18 +98,10 @@ HRESULT CGraphicDevice::InitGraphicDevice()
 	if (!m_pDXGISwapChain || !m_pd3dDevice || !m_pd3dDeviceContext)
 		return E_FAIL;
 
-	ID3D11Texture2D* pd3dBackBuffer;
-
-	if (FAILED(hr = m_pDXGISwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pd3dBackBuffer)))
+	if (!CreateRenderTargetView())
 		return E_FAIL;
 
-	if (FAILED(hr = m_pd3dDevice->CreateRenderTargetView(pd3dBackBuffer, NULL, &m_pd3dRenderTargetView)))
-		return E_FAIL;
-
-	if (pd3dBackBuffer)
-		pd3dBackBuffer->Release();
-
-	m_pd3dDeviceContext->OMSetRenderTargets(1, &m_pd3dRenderTargetView, NULL);
+	SetViewport();
 
 	return S_OK;
 }
@@ -140,6 +132,37 @@ void CGraphicDevice::RenewDeviceSize(int _width, int _height)
 		pd3dBackBuffer->Release();
 
 	m_pd3dDeviceContext->OMSetRenderTargets(1, &m_pd3dRenderTargetView, NULL);
+}
+
+void CGraphicDevice::SetViewport()
+{
+	D3D11_VIEWPORT d3dViewport;
+	d3dViewport.TopLeftX = 0.f;
+	d3dViewport.TopLeftY = 0.f;
+	d3dViewport.Width = (float)m_iClientWindowWidth;
+	d3dViewport.Height = (float)m_iClientWindowHeight;
+	d3dViewport.MinDepth = 0.f;
+	d3dViewport.MaxDepth = 1.f;
+	m_pd3dDeviceContext->RSSetViewports(1, &d3dViewport);
+}
+
+bool CGraphicDevice::CreateRenderTargetView()
+{
+	HRESULT hr;
+	ID3D11Texture2D* pd3dBackBuffer;
+
+	if (FAILED(hr = m_pDXGISwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pd3dBackBuffer)))
+		return false;
+
+	if (FAILED(hr = m_pd3dDevice->CreateRenderTargetView(pd3dBackBuffer, NULL, &m_pd3dRenderTargetView)))
+		return false;
+
+	if (pd3dBackBuffer)
+		pd3dBackBuffer->Release();
+
+	m_pd3dDeviceContext->OMSetRenderTargets(1, &m_pd3dRenderTargetView, NULL);
+
+	return true;
 }
 
 void CGraphicDevice::ReleaseDevice()
