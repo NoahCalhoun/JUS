@@ -42,41 +42,30 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
-	LOCK d;
+	LOCK lockii;
 	shared_ptr<int> ii = make_shared<int>(3);
 
 	BOOL bT1 = TRUE, bT2 = TRUE, bT3 = TRUE;
+	BOOL bT4 = TRUE, bT5 = TRUE, bT6 = TRUE;
 
-	thread t1([&d, &hil, &ii, &bT1]() {
-		while (bT1) {
-			LOCK_GUARD temp(d);
-			if (ii) {
-				for (size_t i = 0; i < 100000; i++)
-				{
-					*ii += 10;
-				}
-				hil.AddLog(_T("t1") + TO_STRING(*ii));
+	auto func = [&lockii, &hil, &ii](BOOL* b, INT _i) {
+		INT i = 0;
+		while (*b) {
+			if (LOCK_GUARD(lockii); ii) {
+				*ii += 1;
+				hil.AddLog(_T("쓰레드 ID : ") + TO_STRING(_i) + _T(" / 호출된 횟수 : ") + TO_STRING(++i) + _T(" / 쓰레드 총 호출 횟수 : ") + TO_STRING(*ii));
 			}
 		}
-	});
-	thread t2([&d, &hil, &ii, &bT2]() {
-		while (bT2) {
-			LOCK_GUARD temp(d);
-			while (ii) {
-				hil.AddLog(_T("t2") + TO_STRING(*ii));
-				ii.reset();
-			}
-		}
-	});
-	thread t3([&d, &hil, &ii, &bT3]() {
-		while (bT3) {
-			LOCK_GUARD temp(d);
-			if (!ii) {
-				ii = make_shared<int>(3);
-				hil.AddLog(_T("t3") + TO_STRING(*ii));
-			}
-		}
-	});
+	};
+
+	enum {ARRAY_COUNT = 20,};
+	BOOL bTTrigger[ARRAY_COUNT];
+	thread thTemps[ARRAY_COUNT];
+	for (INT i = 0; i < ARRAY_COUNT; i++)
+	{
+		bTTrigger[i] = TRUE;
+		thTemps[i] = thread(func, &bTTrigger[i], i);
+	}
 
 	// 기본 메시지 루프입니다.
 	while (GetMessage(&msg, nullptr, 0, 0))
@@ -92,12 +81,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
-	bT1 = FALSE;
-	bT2 = FALSE;
-	bT3 = FALSE;
-	if (t1.joinable()) t1.join();
-	if (t2.joinable()) t2.join();
-	if (t3.joinable()) t3.join();
+	for (size_t i = 0; i < ARRAY_COUNT; i++)
+	{
+		bTTrigger[i] = FALSE;
+	}
+	for (size_t i = 0; i < ARRAY_COUNT; i++)
+	{
+		if (thTemps[i].joinable()) thTemps[i].join();
+	}
 
 	ReleaseMutex(g_hAntiMultiClientMutex);
 	return (int)msg.wParam;
