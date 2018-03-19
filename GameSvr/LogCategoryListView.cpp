@@ -2,16 +2,18 @@
 #include "LogCategoryListView.h"
  
 
-LogCategoryListView::LogCategoryListView()
+CLogCategoryListView::CLogCategoryListView()
 {
 }
 
-LogCategoryListView::~LogCategoryListView()
+CLogCategoryListView::~CLogCategoryListView()
 {
 }
 
-HWND LogCategoryListView::CreateListView(HWND _hwndParent)
+HWND CLogCategoryListView::CreateListView(HWND _hwndParent)
 {
+	if (!_hwndParent) return NULL;
+
 	INITCOMMONCONTROLSEX icex;           // Structure for control initialization.
 	icex.dwICC = ICC_LISTVIEW_CLASSES;
 	InitCommonControlsEx(&icex);
@@ -47,20 +49,17 @@ HWND LogCategoryListView::CreateListView(HWND _hwndParent)
 	m_lvCol.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 	m_lvCol.fmt = LVCFMT_LEFT;
 
-	InsertColumn(LV_COL_LOGTYPE, (LPWSTR)L"Log Type", iW - 17);
+	INT iWidthWithoutScrollBarSize = iW - 17;
 
-	for (size_t i = 0; i < 20; i++)
-	{
-		AddItem((LPWSTR)L"ALL");
+	InsertColumn(LV_COL_LOGTYPE, (LPWSTR)L"Log Type", iWidthWithoutScrollBarSize);
 
-	}
 	AddItem((LPWSTR)L"ALL");
 	AddItem((LPWSTR)L"bye");
 
 	return m_hWndListView;
 }
 
-VOID LogCategoryListView::SetView(DWORD _dwView)
+void CLogCategoryListView::SetView(DWORD _dwView)
 {
 	if (!m_hWndListView) return;
 
@@ -76,7 +75,7 @@ VOID LogCategoryListView::SetView(DWORD _dwView)
 	} 
 }
 
-VOID LogCategoryListView::InsertColumn(LV_COL eCol, LPWSTR _sColName, INT iWidth)
+void CLogCategoryListView::InsertColumn(LV_COL eCol, LPWSTR _sColName, INT iWidth)
 {
 	if (!m_hWndListView) return;
 
@@ -88,16 +87,16 @@ VOID LogCategoryListView::InsertColumn(LV_COL eCol, LPWSTR _sColName, INT iWidth
 	ListView_InsertColumn(m_hWndListView, eCol, &m_lvCol);
 }
 
-VOID LogCategoryListView::AddItem(LPWSTR _sItemName)
+void CLogCategoryListView::AddItem(LPWSTR _sItemName)
 {
-	m_listItem[LV_COL_LOGTYPE].push_back(_sItemName);
+	// m_listItem[LV_COL_LOGTYPE].push_back(_sItemName);
 	// Column 수가 늘어나면 매개변수를 더 받고 아래처럼 추가해줘야함
 	// m_listItem[1].push_back(_sItemName1); 
 
 	Notify();
 }
 
-VOID LogCategoryListView::Notify(void)
+void CLogCategoryListView::Notify(void)
 {
 	if (!m_hWndListView) return;
 
@@ -108,7 +107,7 @@ VOID LogCategoryListView::Notify(void)
 	item.mask = LVIF_TEXT;
 	item.state = 0;
 	item.stateMask = 0;
-
+	/*
 	for (int i = 0; i < LV_COL_END; i++)
 	{
 		item.iSubItem = i;
@@ -125,4 +124,5 @@ VOID LogCategoryListView::Notify(void)
 			++item.iItem;
 		}
 	}
+	*/
 }
