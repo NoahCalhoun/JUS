@@ -58,7 +58,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 	};
 
-	enum {ARRAY_COUNT = 20,};
+	enum {ARRAY_COUNT = 7,};
 	BOOL bTTrigger[ARRAY_COUNT];
 	thread thTemps[ARRAY_COUNT];
 	for (INT i = 0; i < ARRAY_COUNT; i++)
