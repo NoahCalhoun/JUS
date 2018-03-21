@@ -17,6 +17,7 @@ private:
 
 public:
 	HWND CreateListBox(HWND _hwndParent);
+	void Clear(void);
 
 	void AddString(const STRING& _str);
 	void SetHScroll(const STRING& _str);

@@ -22,7 +22,25 @@ void CLog::Initialize(void)
 	if (g_hWnd && m_pListBox)	m_pListBox->CreateListBox(g_hWnd);
 }
 
-void CLog::AddLog(wstring _str)
+void CLog::Notify(void)
 {
-	if (m_pListBox) m_pListBox->AddString(_str);
+	m_pListBox->Clear();
+
+	list<INT> listChecked;
+	m_pCategoryListView->GetCheckedList(listChecked);
+
+	for (auto i : listChecked)
+	{
+		m_listlogs[i];
+	}
+}
+
+void CLog::AddLog(LOGTYPE _eType, STRING _str)
+{
+	if (_eType < 0 || _eType >= LOGTYPE_COUNT) return;
+
+	m_listlogs[_eType].push_back(_str);
+
+	if (m_pListBox && m_pCategoryListView && m_pCategoryListView->IsChecked(_eType))
+		m_pListBox->AddString(_str);
 }

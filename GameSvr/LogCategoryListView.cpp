@@ -22,19 +22,17 @@ HWND CLogCategoryListView::CreateListView(HWND _hwndParent)
 
 	GetClientRect(_hwndParent, &rcClient);
 
-	HMENU empty = HMENU();
-
 	INT iW = (rcClient.right - rcClient.left) / 4;
 	INT iH = rcClient.bottom - rcClient.top;
 	// Create the list-view window in report view with label editing enabled.
 	m_hWndListView = CreateWindow(WC_LISTVIEW,
 		NULL,
-		WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOTIFY |
-		LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL,
+		WS_CHILD | WS_VISIBLE | WS_BORDER | LVS_REPORT |
+		LVS_SINGLESEL,
 		0, 0,
 		iW, iH,
 		_hwndParent,
-		empty,
+		HMENU(),
 		g_hInst,
 		NULL);
 
@@ -51,10 +49,14 @@ HWND CLogCategoryListView::CreateListView(HWND _hwndParent)
 
 	INT iWidthWithoutScrollBarSize = iW - 17;
 
-	InsertColumn(LV_COL_LOGTYPE, (LPWSTR)L"Log Type", iWidthWithoutScrollBarSize);
+	InsertColumn(LV_COL_LOGTYPE, _T( "Log Type" ), iWidthWithoutScrollBarSize);
 
-	AddItem((LPWSTR)L"ALL");
-	AddItem((LPWSTR)L"bye");
+	AddItem(LV_COL_LOGTYPE, _T("ALL"));
+	AddItem(LV_COL_LOGTYPE, _T("bye"));
+
+	Notify();
+
+	ListView_SetCheckState(m_hWndListView, 0, TRUE);
 
 	return m_hWndListView;
 }
@@ -75,25 +77,21 @@ void CLogCategoryListView::SetView(DWORD _dwView)
 	} 
 }
 
-void CLogCategoryListView::InsertColumn(LV_COL eCol, LPWSTR _sColName, INT iWidth)
+void CLogCategoryListView::InsertColumn(LV_COL _eCol, STRING _sColName, INT _iWidth)
 {
 	if (!m_hWndListView) return;
 
 	INT i = ListView_GetItemCount(m_hWndListView);
 
-	m_lvCol.cx = iWidth;
-	m_lvCol.pszText = _sColName;
-	m_lvCol.iSubItem = eCol;
-	ListView_InsertColumn(m_hWndListView, eCol, &m_lvCol);
+	m_lvCol.cx = _iWidth;
+	m_lvCol.pszText = const_cast<LPWSTR>(_sColName.c_str());;
+	m_lvCol.iSubItem = _eCol;
+	ListView_InsertColumn(m_hWndListView, _eCol, &m_lvCol);
 }
 
-void CLogCategoryListView::AddItem(LPWSTR _sItemName)
+void CLogCategoryListView::AddItem(LV_COL _eCol, STRING _sItemName)
 {
-	// m_listItem[LV_COL_LOGTYPE].push_back(_sItemName);
-	// Column 수가 늘어나면 매개변수를 더 받고 아래처럼 추가해줘야함
-	// m_listItem[1].push_back(_sItemName1); 
-
-	Notify();
+	m_listItem[_eCol].push_back(_sItemName);
 }
 
 void CLogCategoryListView::Notify(void)
@@ -107,22 +105,36 @@ void CLogCategoryListView::Notify(void)
 	item.mask = LVIF_TEXT;
 	item.state = 0;
 	item.stateMask = 0;
-	/*
+	
 	for (int i = 0; i < LV_COL_END; i++)
 	{
 		item.iSubItem = i;
 		item.iItem = 1;
-		for (LPWSTR sText : m_listItem[i])
+		for (auto sText : m_listItem[i])
 		{
+			LPWSTR sItemText = const_cast<LPWSTR>(sText.c_str());
 			if (item.iSubItem == 0) {
-				item.pszText = sText;
+				item.pszText = sItemText;
 				ListView_InsertItem(m_hWndListView, &item);
 			}
 			else {
-				ListView_SetItemText(m_hWndListView, item.iItem - 1, item.iSubItem, sText);
+				ListView_SetItemText(m_hWndListView, item.iItem - 1, item.iSubItem, sItemText);
 			}
 			++item.iItem;
 		}
 	}
-	*/
+}
+
+void CLogCategoryListView::GetCheckedList(list<INT>& _listChecked)
+{
+	for (INT i = 0; i < LV_COL_END; i++)
+	{
+		if (ListView_GetCheckState(m_hWndListView, i)) 
+			_listChecked.push_back(i);
+	}
+}
+
+BOOL CLogCategoryListView::IsChecked(LOGTYPE _eType)
+{
+	return ListView_GetCheckState(m_hWndListView, _eType);
 }

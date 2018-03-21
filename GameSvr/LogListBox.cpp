@@ -45,6 +45,11 @@ HWND CLogListBox::CreateListBox(HWND _hwndParent)
 	return m_hWnd;
 }
 
+void CLogListBox::Clear(void)
+{
+	SendMessage(m_hWnd, LB_RESETCONTENT, 0, 0);
+}
+
 void CLogListBox::AddString(const STRING& _str)
 {
 	if (m_iCurIdx > LOGLISTBOX_LOG_COUNT_MAX) {

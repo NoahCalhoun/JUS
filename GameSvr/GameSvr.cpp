@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include "GameSvr.h"
+
+#include <CommCtrl.h>
 #include "Log.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -51,14 +53,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	auto func = [&lockii, &hil, &ii](BOOL* b, INT _i) {
 		INT i = 0;
 		while (*b) {
+			Sleep(1);
 			if (LOCK_GUARD(lockii); ii) {
 				*ii += 1;
-				hil.AddLog(_T("쓰레드 ID : ") + TO_STRING(_i) + _T(" / 호출된 횟수 : ") + TO_STRING(++i) + _T(" / 쓰레드 총 호출 횟수 : ") + TO_STRING(*ii));
+				hil.AddLog((LOGTYPE)_i, _T("쓰레드 ID : ") + TO_STRING(_i) + _T(" / 호출된 횟수 : ") + TO_STRING(++i) + _T(" / 쓰레드 총 호출 횟수 : ") + TO_STRING(*ii));
 			}
 		}
 	};
 
-	enum {ARRAY_COUNT = 7,};
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+
+	enum {ARRAY_COUNT = 15,};
 	BOOL bTTrigger[ARRAY_COUNT];
 	thread thTemps[ARRAY_COUNT];
 	for (INT i = 0; i < ARRAY_COUNT; i++)
@@ -165,6 +171,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
+	case WM_NOTIFY:
+	{
+		switch (((LPNMLISTVIEW)lParam)->hdr.code)
+		{
+		case LVN_ITEMCHANGED:
+			INT i = 0;
+
+			break;
+
+		}
+	}
+	break;
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);
