@@ -25,6 +25,12 @@
     <Filter Include="Main\Resources\Shader">
       <UniqueIdentifier>{fdecfb83-d9c1-4802-afa3-d8c2bbab19a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\JSObject">
+      <UniqueIdentifier>{2d64bc6a-1c42-4369-b2ef-d1a4c22bd9ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\JSComponent">
+      <UniqueIdentifier>{dbae76cc-b77b-4058-bbd1-288bda5a1a8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -66,6 +72,12 @@
     <ClInclude Include="Codes\TestScene.h">
       <Filter>Main\Test</Filter>
     </ClInclude>
+    <ClInclude Include="Codes\Transform.h">
+      <Filter>Main\JSComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\JSObjectBase.hpp">
+      <Filter>Main\JSObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -97,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="Codes\TestScene.cpp">
       <Filter>Main\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\Transform.cpp">
+      <Filter>Main\JSComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

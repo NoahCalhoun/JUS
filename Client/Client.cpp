@@ -2,8 +2,12 @@
 //
 
 #include "stdafx.h"
-#include "Client.h"
 
+#if defined(DEBUG) || defined(_DEBUG)
+	#include "vld.h"
+#endif
+
+#include "Client.h"
 #include "Define.h"
 #include "MainApp.h"
 
