@@ -27,12 +27,39 @@
     <ClInclude Include="GameSvr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="LogCategoryListView.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalVar.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="LogListBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameSvr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LogCategoryListView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVar.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LogListBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

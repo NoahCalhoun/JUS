@@ -1,52 +1,120 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Default">
+      <UniqueIdentifier>{80ab158a-039b-427d-9c14-6264fa7474ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Main">
+      <UniqueIdentifier>{8a282dd9-fd04-49be-b823-345687996970}</UniqueIdentifier>
     </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Main\Header">
+      <UniqueIdentifier>{6bf91bac-bfaa-442c-9874-ec26f54aad20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Device">
+      <UniqueIdentifier>{925d66c2-a808-401d-b7da-bf2c0bddeaee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager">
+      <UniqueIdentifier>{10c9886a-9a59-4d8c-a287-38e6e704b752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Test">
+      <UniqueIdentifier>{4a2484ce-63a4-4f18-b28d-bc071028aa06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Resources">
+      <UniqueIdentifier>{a6af1237-392f-4c9e-bf2a-aff735c4ede5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Resources\Shader">
+      <UniqueIdentifier>{fdecfb83-d9c1-4802-afa3-d8c2bbab19a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Client.h">
+      <Filter>Default</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Default</Filter>
     </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="stdafx.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>Main\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\GraphicDevice.h">
+      <Filter>Main\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\MainApp.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\InputDevice.h">
+      <Filter>Main\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TimeManager.h">
+      <Filter>Main\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TestMesh.h">
+      <Filter>Main\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TestObject.h">
+      <Filter>Main\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TestShader.h">
+      <Filter>Main\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\TestScene.h">
+      <Filter>Main\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\GraphicDevice.cpp">
+      <Filter>Main\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\MainApp.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\InputDevice.cpp">
+      <Filter>Main\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TimeManager.cpp">
+      <Filter>Main\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Default</Filter>
     </ClCompile>
+    <ClCompile Include="Codes\TestMesh.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TestObject.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TestShader.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\TestScene.cpp">
+      <Filter>Main\Test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Client.ico">
+      <Filter>Default</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>Default</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
-      <Filter>리소스 파일</Filter>
+      <Filter>Default</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="Client.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
+    <None Include="Resources\Shader\Effect.fx">
+      <Filter>Main\Resources\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
