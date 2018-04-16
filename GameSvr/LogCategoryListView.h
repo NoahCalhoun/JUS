@@ -20,15 +20,19 @@ protected:
 	HWND m_hWndListView;
 	LVCOLUMN m_lvCol;
 	
-	list<STRING> m_listItem[LV_COL_END];
+	LOCK m_lock;
+	vector<BOOL> m_aChecked;
 public:
 	HWND CreateListView(HWND _hwndParent);
-	void SetView(DWORD _dwView);
 
-	void InsertColumn(LV_COL _eCol, STRING _sColName, INT _iWidth);
-	void AddItem(LV_COL _eCol, STRING _sItemName);
-	void Notify(void);
+	BOOL OnNotify(LPNMLISTVIEW pNMLV);
 
-	void GetCheckedList(list<INT>& _listChecked);
 	BOOL IsChecked(LOGTYPE _eType);
+	void SetCheck(LOGTYPE _eType, BOOL _bCheck);
+	INT GetCheckCount(void);
+
+private:
+	void InsertColumn(LV_COL _eCol, STRING _sColName, INT _iWidth);
+	void ColumnRegister(void);
+
 };

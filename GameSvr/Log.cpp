@@ -16,31 +16,76 @@ CLog::~CLog()
 void CLog::Initialize(void)
 {
 	m_pCategoryListView = make_shared<CLogCategoryListView>();
-	if (g_hWnd && m_pCategoryListView)	m_pCategoryListView->CreateListView(g_hWnd);
+	if (g_hWnd && m_pCategoryListView)	
+		m_hListView = m_pCategoryListView->CreateListView(g_hWnd);
 
 	m_pListBox = make_shared<CLogListBox>();
-	if (g_hWnd && m_pListBox)	m_pListBox->CreateListBox(g_hWnd);
+	if (g_hWnd && m_pListBox) 
+		m_hListBox = m_pListBox->CreateListBox(g_hWnd);
 }
 
-void CLog::Notify(void)
+void CLog::OnNotifyListView(LPNMLISTVIEW pNMLV)
 {
-	m_pListBox->Clear();
-
-	list<INT> listChecked;
-	m_pCategoryListView->GetCheckedList(listChecked);
-
-	for (auto i : listChecked)
-	{
-		m_listlogs[i];
-	}
+	if (m_pCategoryListView && m_pCategoryListView->OnNotify(pNMLV))
+		Rewrite();
 }
 
 void CLog::AddLog(LOGTYPE _eType, STRING _str)
 {
 	if (_eType < 0 || _eType >= LOGTYPE_COUNT) return;
 
-	m_listlogs[_eType].push_back(_str);
+	auto_lock(m_lock);
 
-	if (m_pListBox && m_pCategoryListView && m_pCategoryListView->IsChecked(_eType))
-		m_pListBox->AddString(_str);
+	if (m_listNewLogs.size() >= LOG_COUNT_MAX) m_listNewLogs.pop_front();
+	m_listNewLogs.push_back({ _eType, _str });
+}
+
+void CLog::UpdateLog(void)
+{
+	auto_lock(m_lock);
+	if (!m_pListBox || !m_pCategoryListView) return;
+
+	for (auto log : m_listNewLogs)
+	{
+		AddString(log.eType, log.sLog);
+	}
+	
+	m_listLogs.splice(m_listLogs.end(), m_listNewLogs);
+
+	while (m_listLogs.size() > LOG_COUNT_MAX) {
+		m_listLogs.pop_front();
+	}
+}
+
+HWND CLog::GetListViewHandle(void)
+{
+	return m_hListView;
+}
+
+HWND CLog::GetListBoxHandle(void)
+{
+	return m_hListBox;
+}
+
+void CLog::AddString(LOGTYPE _eType, const STRING & _str)
+{
+	if (!m_pListBox || !m_pCategoryListView) return;
+
+	if (m_pCategoryListView->IsChecked(LOGTYPE_ALL)) m_pListBox->AddString(_str);
+	else if (m_pCategoryListView->IsChecked(_eType)) m_pListBox->AddString(_str);
+}
+
+void CLog::Rewrite(void)
+{
+	if (!m_pListBox || !m_pCategoryListView) return;
+
+	m_pListBox->Clear();
+
+	synchronized(m_lock) 
+	{
+		for (auto log : m_listLogs)
+		{
+			AddString(log.eType, log.sLog);
+		}
+	}
 }

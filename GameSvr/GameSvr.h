@@ -7,6 +7,8 @@
 class CLog;
 shared_ptr<CLog> g_pLog;
 
+thread::id g_tidMain;
+
 HANDLE g_hAntiMultiClientMutex;
 
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.

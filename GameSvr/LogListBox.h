@@ -20,6 +20,8 @@ public:
 	void Clear(void);
 
 	void AddString(const STRING& _str);
+
+private:
 	void SetHScroll(const STRING& _str);
 };
 

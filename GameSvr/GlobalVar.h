@@ -7,5 +7,5 @@ extern INT g_nWindowWidth;
 extern INT g_nWindowHeight;
 
 enum {
-	LOGLISTBOX_LOG_COUNT_MAX = 300,
+	LOG_COUNT_MAX = 100,
 };

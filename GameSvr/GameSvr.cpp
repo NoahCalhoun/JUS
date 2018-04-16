@@ -18,6 +18,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		MessageBox(NULL, _T("이미 실행중입니다."), _T("알림"), MB_OK);
 		return 0;
 	}
+	g_tidMain = std::this_thread::get_id();
 
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
@@ -35,10 +36,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	//g_pLog = make_shared<CLog>();
-	//g_pLog->Initialize();
-	CLog hil;
-	hil.Initialize();
+	g_pLog = make_shared<CLog>();
+	g_pLog->Initialize();
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GAMESVR));
 
@@ -47,16 +46,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	LOCK lockii;
 	shared_ptr<int> ii = make_shared<int>(3);
 
-	BOOL bT1 = TRUE, bT2 = TRUE, bT3 = TRUE;
-	BOOL bT4 = TRUE, bT5 = TRUE, bT6 = TRUE;
-
-	auto func = [&lockii, &hil, &ii](BOOL* b, INT _i) {
+	auto func = [&lockii, &ii](BOOL* b, INT _i) {
 		INT i = 0;
 		while (*b) {
-			Sleep(1);
-			if (LOCK_GUARD(lockii); ii) {
+			Sleep(100);
+			if (LOCK_GUARD temp(lockii); ii) {
 				*ii += 1;
-				hil.AddLog((LOGTYPE)_i, _T("쓰레드 ID : ") + TO_STRING(_i) + _T(" / 호출된 횟수 : ") + TO_STRING(++i) + _T(" / 쓰레드 총 호출 횟수 : ") + TO_STRING(*ii));
+				g_pLog->AddLog((LOGTYPE)_i, _T("쓰레드 ID : ") + TO_STRING(_i) + _T(" / 호출된 횟수 : ") + TO_STRING(++i) + _T(" / 쓰레드 총 호출 횟수 : ") + TO_STRING(*ii));
 			}
 		}
 	};
@@ -64,7 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	SYSTEM_INFO info;
 	GetSystemInfo(&info);
 
-	enum {ARRAY_COUNT = 15,};
+	enum {ARRAY_COUNT = 5,};
 	BOOL bTTrigger[ARRAY_COUNT];
 	thread thTemps[ARRAY_COUNT];
 	for (INT i = 0; i < ARRAY_COUNT; i++)
@@ -74,13 +70,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	// 기본 메시지 루프입니다.
-	while (GetMessage(&msg, nullptr, 0, 0))
+	while (TRUE)
 	{
-		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) 
 		{
-			TranslateMessage(&msg);
+			if (msg.message == WM_QUIT) break;
 			DispatchMessage(&msg);
 		}
+
+		//if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		//{
+		//	TranslateMessage(&msg);
+		//	DispatchMessage(&msg);
+		//}
+
+		g_pLog->UpdateLog();
 
 		if (GetAsyncKeyState(VK_RETURN)) {
 			//g_pLog->AddLog(to_wstring(i++) + _T("ㄹㄹㄹㄹㄹㄹㄹㄹㄹasdfasdfㄴㅇㄹㄴㅇㄹㄴㅇㄹㅇㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ"));
@@ -173,13 +177,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_NOTIFY:
 	{
-		switch (((LPNMLISTVIEW)lParam)->hdr.code)
-		{
-		case LVN_ITEMCHANGED:
-			INT i = 0;
-
-			break;
-
+		if (GetDlgCtrlID(g_pLog->GetListViewHandle()) == wParam) {
+			g_pLog->OnNotifyListView((LPNMLISTVIEW)lParam);
 		}
 	}
 	break;

@@ -48,17 +48,18 @@ HWND CLogListBox::CreateListBox(HWND _hwndParent)
 void CLogListBox::Clear(void)
 {
 	SendMessage(m_hWnd, LB_RESETCONTENT, 0, 0);
+	m_iCurIdx = 0;
 }
 
 void CLogListBox::AddString(const STRING& _str)
 {
-	if (m_iCurIdx > LOGLISTBOX_LOG_COUNT_MAX) {
+	if (m_iCurIdx > LOG_COUNT_MAX) {
 		SendMessage(m_hWnd, LB_DELETESTRING, 0, 0);
 		m_iCurIdx--;
 	}
 
 	SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str());
-	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx++, 0);
+	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx++ - 10, 0);
 
 	SetHScroll(_str);
 }

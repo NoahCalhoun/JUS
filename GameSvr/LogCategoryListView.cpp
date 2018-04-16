@@ -49,32 +49,81 @@ HWND CLogCategoryListView::CreateListView(HWND _hwndParent)
 
 	INT iWidthWithoutScrollBarSize = iW - 17;
 
-	InsertColumn(LV_COL_LOGTYPE, _T( "Log Type" ), iWidthWithoutScrollBarSize);
+	InsertColumn(LV_COL_LOGTYPE, _T("Log Type"), iWidthWithoutScrollBarSize);
 
-	AddItem(LV_COL_LOGTYPE, _T("ALL"));
-	AddItem(LV_COL_LOGTYPE, _T("bye"));
+	ColumnRegister();
 
-	Notify();
-
-	ListView_SetCheckState(m_hWndListView, 0, TRUE);
+	SetCheck(LOGTYPE_ALL, TRUE);
 
 	return m_hWndListView;
 }
 
-void CLogCategoryListView::SetView(DWORD _dwView)
+BOOL CLogCategoryListView::OnNotify(LPNMLISTVIEW pNMLV)
 {
-	if (!m_hWndListView) return;
+	BOOL bRewrite = FALSE;
 
-	// Retrieve the current window style. 
-	DWORD dwStyle = GetWindowLong(m_hWndListView, GWL_STYLE);
-
-	// Set the window style only if the view bits changed.
-	if ((dwStyle & LVS_TYPEMASK) != _dwView)
+	switch (pNMLV->hdr.code)
 	{
-		SetWindowLong(m_hWndListView,
-			GWL_STYLE,
-			(dwStyle & ~LVS_TYPEMASK) | _dwView);
-	} 
+	case LVN_ITEMCHANGED:
+	{
+		if (pNMLV->uChanged & LVIF_STATE) /* Item state has been changed */
+		{
+			switch (pNMLV->uNewState & LVIS_STATEIMAGEMASK)
+			{
+			case 0x2000: /* CHECKED */
+			{
+				synchronized(m_lock) m_aChecked[pNMLV->iItem] = TRUE;
+
+				if (pNMLV->iItem == LOGTYPE_ALL) {
+					for (int i = 1; i < LOGTYPE_COUNT; i++)
+					{
+						SetCheck((LOGTYPE)i, FALSE);
+					}
+				}
+				else {
+					SetCheck(LOGTYPE_ALL, FALSE);
+				}
+				bRewrite = TRUE;
+			}
+			break;
+
+			case 0x1000: /* UNCHECKED */
+			{
+				synchronized(m_lock) m_aChecked[pNMLV->iItem] = FALSE;
+				bRewrite = TRUE;
+			}
+			break;
+			}
+		}
+	}
+	break;
+	}
+
+	return bRewrite;
+}
+
+BOOL CLogCategoryListView::IsChecked(LOGTYPE _eType)
+{
+	auto_lock(m_lock);
+	return m_aChecked[_eType];
+}
+
+void CLogCategoryListView::SetCheck(LOGTYPE _eType, BOOL _bCheck)
+{
+	ListView_SetCheckState(m_hWndListView, _eType, _bCheck);
+	synchronized(m_lock) m_aChecked[_eType] = _bCheck;
+}
+
+INT CLogCategoryListView::GetCheckCount(void)
+{
+	INT iCnt = 0;
+	for (INT i = 0; i < LOGTYPE_COUNT; i++)
+	{
+		if (IsChecked((LOGTYPE)i))
+			++iCnt;
+	}
+
+	return iCnt;
 }
 
 void CLogCategoryListView::InsertColumn(LV_COL _eCol, STRING _sColName, INT _iWidth)
@@ -89,28 +138,52 @@ void CLogCategoryListView::InsertColumn(LV_COL _eCol, STRING _sColName, INT _iWi
 	ListView_InsertColumn(m_hWndListView, _eCol, &m_lvCol);
 }
 
-void CLogCategoryListView::AddItem(LV_COL _eCol, STRING _sItemName)
-{
-	m_listItem[_eCol].push_back(_sItemName);
-}
-
-void CLogCategoryListView::Notify(void)
+void CLogCategoryListView::ColumnRegister(void)
 {
 	if (!m_hWndListView) return;
 
-	ListView_DeleteAllItems(m_hWndListView);
+	vector<STRING> aItem[LV_COL_END];
+
+	STRING sTypeName[LOGTYPE_COUNT] = {
+		_T("ALL"),
+		_T("0"),
+		_T("1"),
+		/*
+		_T("2"),
+		_T("3"),
+		_T("4"),
+		_T("5"),
+		_T("6"),
+		_T("7"),
+		_T("8"),
+		_T("9"),
+		_T("10"),
+		_T("11"),
+		_T("12"),
+		_T("13"),
+		_T("14"),
+		_T("15"),
+		*/
+	};
+
+	aItem[LV_COL_LOGTYPE].resize(LOGTYPE_COUNT);
+	m_aChecked.resize(LOGTYPE_COUNT, FALSE);
+	for (INT i = 0; i < LOGTYPE_COUNT; i++)
+	{
+		aItem[LV_COL_LOGTYPE][i] = sTypeName[i];
+	}
 
 	LVITEM item;
 
 	item.mask = LVIF_TEXT;
 	item.state = 0;
 	item.stateMask = 0;
-	
+
 	for (int i = 0; i < LV_COL_END; i++)
 	{
 		item.iSubItem = i;
 		item.iItem = 1;
-		for (auto sText : m_listItem[i])
+		for (auto sText : aItem[i])
 		{
 			LPWSTR sItemText = const_cast<LPWSTR>(sText.c_str());
 			if (item.iSubItem == 0) {
@@ -123,18 +196,4 @@ void CLogCategoryListView::Notify(void)
 			++item.iItem;
 		}
 	}
-}
-
-void CLogCategoryListView::GetCheckedList(list<INT>& _listChecked)
-{
-	for (INT i = 0; i < LV_COL_END; i++)
-	{
-		if (ListView_GetCheckState(m_hWndListView, i)) 
-			_listChecked.push_back(i);
-	}
-}
-
-BOOL CLogCategoryListView::IsChecked(LOGTYPE _eType)
-{
-	return ListView_GetCheckState(m_hWndListView, _eType);
 }

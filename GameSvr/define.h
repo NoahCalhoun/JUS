@@ -11,4 +11,5 @@ using STRING = string;
 using LOCK = recursive_mutex;
 using LOCK_GUARD = lock_guard<recursive_mutex>;
 
-#define synchronized(n) if (lock_guard<recursive_mutex>(n), FALSE) {} else
+#define synchronized(n) if (LOCK_GUARD(n), FALSE) {} else
+#define auto_lock(n) LOCK_GUARD al(n)
