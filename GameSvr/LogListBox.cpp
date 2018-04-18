@@ -66,7 +66,7 @@ void CLogListBox::AddString(const STRING& _str)
 	}
 	
 	SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str());
-	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx - 30, 0);
+	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx, 0);
 
 	m_iCurIdx++;
 
