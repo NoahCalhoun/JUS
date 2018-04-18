@@ -3,7 +3,7 @@
  
 
 CLogCategoryListView::CLogCategoryListView()
-	: m_bIgnoreRewrite(FALSE)
+	: m_bIgnoreNotify(FALSE)
 {
 }
 
@@ -61,6 +61,8 @@ HWND CLogCategoryListView::CreateListView(HWND _hwndParent)
 
 BOOL CLogCategoryListView::OnNotify(LPNMLISTVIEW pNMLV)
 {
+	if (m_bIgnoreNotify) return FALSE;
+
 	BOOL bRewrite = FALSE;
 
 	switch (pNMLV->hdr.code)
@@ -84,14 +86,14 @@ BOOL CLogCategoryListView::OnNotify(LPNMLISTVIEW pNMLV)
 				else {
 					SetCheck(LOGTYPE_ALL, FALSE);
 				}
-				if (!m_bIgnoreRewrite) bRewrite = TRUE;
+				bRewrite = TRUE;
 			}
 			break;
 
 			case 0x1000: /* UNCHECKED */
 			{
 				synchronized(m_lock) m_aChecked[pNMLV->iItem] = FALSE;
-				if (!m_bIgnoreRewrite) bRewrite = TRUE;
+				bRewrite = TRUE;
 			}
 			break;
 			}
@@ -111,9 +113,9 @@ BOOL CLogCategoryListView::IsChecked(LOGTYPE _eType)
 
 void CLogCategoryListView::SetCheck(LOGTYPE _eType, BOOL _bCheck)
 {
-	m_bIgnoreRewrite = TRUE;
+	m_bIgnoreNotify = TRUE;
 	ListView_SetCheckState(m_hWndListView, _eType, _bCheck);
-	m_bIgnoreRewrite = FALSE;
+	m_bIgnoreNotify = FALSE;
 	synchronized(m_lock) m_aChecked[_eType] = _bCheck;
 }
 
