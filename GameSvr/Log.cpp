@@ -83,6 +83,10 @@ void CLog::Rewrite(void)
 
 	synchronized(m_lock) 
 	{
+		while (m_listLogs.size() > LOG_COUNT_MAX) {
+			m_listLogs.pop_front();
+		}
+
 		for (auto log : m_listLogs)
 		{
 			AddString(log.eType, log.sLog);
