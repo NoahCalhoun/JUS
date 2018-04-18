@@ -61,12 +61,11 @@ void CLogListBox::Reserve(UINT _iReservePerLine /* = LOG_RESERVE_PER_LINE */)
 void CLogListBox::AddString(const STRING& _str)
 {
 	if (m_iCurIdx >= LOG_COUNT_MAX) {
-		PostMessage(m_hWnd, LB_DELETESTRING, 0, 0);
+		SendMessage(m_hWnd, LB_DELETESTRING, 0, 0);
 		m_iCurIdx--;
 	}
-	
-	SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str());
-	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx, 0);
+
+	SendMessage(m_hWnd, LB_SETCURSEL, SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str()), 0);
 
 	m_iCurIdx++;
 
