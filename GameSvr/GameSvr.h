@@ -5,7 +5,7 @@
 #define MAX_LOADSTRING 100
 
 class CLog;
-shared_ptr<CLog> g_pLog;
+shared_ptr<CLog> g_pLog = NULL;
 
 thread::id g_tidMain;
 

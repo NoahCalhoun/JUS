@@ -177,7 +177,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_NOTIFY:
 	{
-		if (GetDlgCtrlID(g_pLog->GetListViewHandle()) == wParam) {
+		if (g_pLog && GetDlgCtrlID(g_pLog->GetListViewHandle()) == wParam) {
 			g_pLog->OnNotifyListView((LPNMLISTVIEW)lParam);
 		}
 	}

@@ -19,6 +19,7 @@ public:
 protected:
 	HWND m_hWndListView;
 	LVCOLUMN m_lvCol;
+	BOOL m_bIgnoreRewrite;
 	
 	LOCK m_lock;
 	vector<BOOL> m_aChecked;
