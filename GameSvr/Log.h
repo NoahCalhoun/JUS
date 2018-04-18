@@ -65,5 +65,6 @@ public:
 
 private:
 	void AddString(LOGTYPE _eType, const STRING& _str);
+	void AntiFlood(void);
 	void Rewrite(void);
 };

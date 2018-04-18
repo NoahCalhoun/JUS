@@ -42,6 +42,8 @@ HWND CLogListBox::CreateListBox(HWND _hwndParent)
 
 	SendMessage(m_hWnd, WM_SETFONT, (WPARAM)m_hFont, 0);
 
+	Reserve();
+
 	return m_hWnd;
 }
 
@@ -51,15 +53,22 @@ void CLogListBox::Clear(void)
 	m_iCurIdx = 0;
 }
 
+void CLogListBox::Reserve(UINT _iReservePerLine /* = LOG_RESERVE_PER_LINE */)
+{
+	SendMessage(m_hWnd, LB_INITSTORAGE, LOG_COUNT_MAX, _iReservePerLine);
+}
+
 void CLogListBox::AddString(const STRING& _str)
 {
-	if (m_iCurIdx > LOG_COUNT_MAX) {
-		SendMessage(m_hWnd, LB_DELETESTRING, 0, 0);
+	if (m_iCurIdx >= LOG_COUNT_MAX) {
+		PostMessage(m_hWnd, LB_DELETESTRING, 0, 0);
 		m_iCurIdx--;
 	}
-
+	
 	SendMessage(m_hWnd, LB_ADDSTRING, 0, (LPARAM)_str.c_str());
-	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx++ - 10, 0);
+	SendMessage(m_hWnd, LB_SETTOPINDEX, m_iCurIdx - 30, 0);
+
+	m_iCurIdx++;
 
 	SetHScroll(_str);
 }

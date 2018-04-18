@@ -52,9 +52,7 @@ void CLog::UpdateLog(void)
 	
 	m_listLogs.splice(m_listLogs.end(), m_listNewLogs);
 
-	while (m_listLogs.size() > LOG_COUNT_MAX) {
-		m_listLogs.pop_front();
-	}
+	AntiFlood();
 }
 
 HWND CLog::GetListViewHandle(void)
@@ -75,17 +73,23 @@ void CLog::AddString(LOGTYPE _eType, const STRING & _str)
 	else if (m_pCategoryListView->IsChecked(_eType)) m_pListBox->AddString(_str);
 }
 
+void CLog::AntiFlood(void)
+{
+	while (m_listLogs.size() > LOG_COUNT_MAX) {
+		m_listLogs.pop_front();
+	}
+}
+
 void CLog::Rewrite(void)
 {
 	if (!m_pListBox || !m_pCategoryListView) return;
 
 	m_pListBox->Clear();
+	m_pListBox->Reserve();
 
 	synchronized(m_lock) 
 	{
-		while (m_listLogs.size() > LOG_COUNT_MAX) {
-			m_listLogs.pop_front();
-		}
+		AntiFlood();
 
 		for (auto log : m_listLogs)
 		{

@@ -19,6 +19,7 @@ public:
 	HWND CreateListBox(HWND _hwndParent);
 	void Clear(void);
 
+	void Reserve( UINT _iReservePerLine = LOG_RESERVE_PER_LINE);
 	void AddString(const STRING& _str);
 
 private:
