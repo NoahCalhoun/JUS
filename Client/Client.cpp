@@ -10,6 +10,7 @@
 #include "Client.h"
 #include "Define.h"
 #include "MainApp.h"
+#include "InputDevice.h"
 
 #define MAX_LOADSTRING 100
 

@@ -156,14 +156,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Codes\Camera.h" />
     <ClInclude Include="Codes\GraphicDevice.h" />
     <ClInclude Include="Codes\InputDevice.h" />
     <ClInclude Include="Codes\JSObjectBase.hpp" />
     <ClInclude Include="Codes\MainApp.h" />
-    <ClInclude Include="Codes\TestMesh.h" />
-    <ClInclude Include="Codes\TestObject.h" />
-    <ClInclude Include="Codes\TestScene.h" />
-    <ClInclude Include="Codes\TestShader.h" />
+    <ClInclude Include="Codes\Renderer.h" />
+    <ClInclude Include="Codes\RenderManager.h" />
     <ClInclude Include="Codes\TimeManager.h" />
     <ClInclude Include="Codes\Transform.h" />
     <ClInclude Include="Define.h" />
@@ -173,13 +172,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Codes\Camera.cpp" />
     <ClCompile Include="Codes\GraphicDevice.cpp" />
     <ClCompile Include="Codes\InputDevice.cpp" />
     <ClCompile Include="Codes\MainApp.cpp" />
-    <ClCompile Include="Codes\TestMesh.cpp" />
-    <ClCompile Include="Codes\TestObject.cpp" />
-    <ClCompile Include="Codes\TestScene.cpp" />
-    <ClCompile Include="Codes\TestShader.cpp" />
+    <ClCompile Include="Codes\Renderer.cpp" />
+    <ClCompile Include="Codes\RenderManager.cpp" />
     <ClCompile Include="Codes\TimeManager.cpp" />
     <ClCompile Include="Codes\Transform.cpp" />
     <ClCompile Include="stdafx.cpp">

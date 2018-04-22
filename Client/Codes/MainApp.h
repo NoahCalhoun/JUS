@@ -1,11 +1,5 @@
 #pragma once
 
-#include "GraphicDevice.h"
-#include "InputDevice.h"
-#include "TimeManager.h"
-
-#include "TestScene.h"
-
 class CMainApp
 {
 public:
@@ -13,11 +7,13 @@ public:
 	virtual ~CMainApp();
 
 private:
-	shared_ptr<CGraphicDevice> m_pGraphicDev;
-	shared_ptr<CInputDevice> m_pInputDev;
-	shared_ptr<CTimeManager> m_pTimeMgr;
+	shared_ptr<class CGraphicDevice> m_pGraphicDev;
+	shared_ptr<class CInputDevice> m_pInputDev;
+	shared_ptr<class CTimeManager> m_pTimeMgr;
+	shared_ptr<class JSRenderManager> m_pRenderManager;
 
-	shared_ptr<CTestScene> m_pScene;
+	shared_ptr<class JSObjectBase> m_pCamera;
+	shared_ptr<class JSObjectBase> m_pObject;
 
 	_TCHAR m_pszBuffer[50];
 

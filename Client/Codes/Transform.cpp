@@ -1,16 +1,12 @@
 #include "stdafx.h"
 #include "Transform.h"
 
-D3DXVECTOR3 JSTransform::ZeroVector = D3DXVECTOR3(0, 0, 0);
-D3DXVECTOR3 JSTransform::OneVector = D3DXVECTOR3(1, 1, 1);
-D3DXMATRIX JSTransform::IdentityMatrix = D3DXMATRIX(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-
 JSTransform::JSTransform()
 	: JSComponentBase()
-	, m_matWorld(IdentityMatrix)
-	, m_vScale(OneVector)
-	, m_qRotation(0, 0, 0, 1)
-	, m_vPosition(ZeroVector)
+	, m_matWorld(JSMATRIX::Identity())
+	, m_vScale(JSVECTOR::One())
+	, m_qRotation(JSVECTOR::Zero())
+	, m_vPosition(JSVECTOR::Zero())
 {
 }
 
@@ -29,9 +25,9 @@ void JSTransform::UpdateComponent()
 	GenerateWorldMatrix();
 }
 
-D3DXVECTOR3 JSTransform::MatrixToEuler(const D3DXMATRIX & _matrix)
+JSVECTOR JSTransform::MatrixToEuler(const JSMATRIX & _matrix)
 {
-	D3DXMATRIX	matWorld = _matrix;
+	JSMATRIX matWorld = _matrix;
 	D3DXVec3Normalize((D3DXVECTOR3*)matWorld.m[0], (D3DXVECTOR3*)matWorld.m[0]);
 	D3DXVec3Normalize((D3DXVECTOR3*)matWorld.m[1], (D3DXVECTOR3*)matWorld.m[1]);
 	D3DXVec3Normalize((D3DXVECTOR3*)matWorld.m[2], (D3DXVECTOR3*)matWorld.m[2]);
@@ -52,36 +48,41 @@ D3DXVECTOR3 JSTransform::MatrixToEuler(const D3DXMATRIX & _matrix)
 	yaw = critical ? 0.f : atan2f(-1 * matWorld.m[2][0], matWorld.m[2][2]);
 	roll = critical ? atan2f(matWorld.m[1][0], matWorld.m[0][0]) : atan2f(-1 * matWorld.m[0][1], matWorld.m[1][1]);
 
-	return D3DXVECTOR3(pitch, yaw, roll);
+	return JSVECTOR(pitch, yaw, roll);
 }
 
-D3DXVECTOR3 JSTransform::QuaternionToEuler(const D3DXQUATERNION & _quaternion)
+JSVECTOR JSTransform::QuaternionToEuler(const JSVECTOR & _quaternion)
 {
-	float sqw = _quaternion.w * _quaternion.w;
-	float sqx = _quaternion.x * _quaternion.x;
-	float sqy = _quaternion.y * _quaternion.y;
-	float sqz = _quaternion.z * _quaternion.z;
+	float quatX = _quaternion.f[0];
+	float quatY = _quaternion.f[1];
+	float quatZ = _quaternion.f[2];
+	float quatW = _quaternion.f[3];
 
-	float x = (asinf(2.f * (_quaternion.w * _quaternion.x - _quaternion.y * _quaternion.z)));
-	float y = (atan2f(2.f * (_quaternion.x * _quaternion.z + _quaternion.w * _quaternion.y), (-sqx - sqy + sqz + sqw)));
-	float z = (atan2f(2.f * (_quaternion.x * _quaternion.y + _quaternion.w * _quaternion.z), (-sqx + sqy - sqz + sqw)));
+	float sqw = quatW * quatW;
+	float sqx = quatX * quatX;
+	float sqy = quatY * quatY;
+	float sqz = quatZ * quatZ;
 
-	return D3DXVECTOR3(x, y, z);
+	float x = (asinf(2.f * (quatW * quatX - quatY * quatZ)));
+	float y = (atan2f(2.f * (quatX * quatZ + quatW * quatY), (-sqx - sqy + sqz + sqw)));
+	float z = (atan2f(2.f * (quatX * quatY + quatW * quatZ), (-sqx + sqy - sqz + sqw)));
+
+	return JSVECTOR(x, y, z);
 }
 
 void JSTransform::SetScale(const float & _scale)
 {
-	m_vScale = OneVector * _scale;
+	m_vScale = JSVECTOR::One() * _scale;
 }
 
-void JSTransform::SetPosition(const D3DXVECTOR3 & _position)
+void JSTransform::SetPosition(const JSVECTOR & _position)
 {
 	m_vPosition = _position;
 }
 
-void JSTransform::SetRotation(const D3DXVECTOR3 & _rotation)
+void JSTransform::SetRotation(const JSVECTOR & _rotation)
 {
-	D3DXQuaternionRotationYawPitchRoll(&m_qRotation, _rotation.y, _rotation.x, _rotation.z);
+	m_qRotation = XMQuaternionRotationRollPitchYaw(_rotation.f[0], _rotation.f[1], _rotation.f[2]);
 }
 
 void JSTransform::Scaling(const float & _scale)
@@ -89,66 +90,67 @@ void JSTransform::Scaling(const float & _scale)
 	m_vScale *= _scale;
 }
 
-void JSTransform::Translate(const D3DXVECTOR3 & _vector)
+void JSTransform::Translate(const JSVECTOR & _vector)
 {
 	m_vPosition += _vector;
 }
 
 void JSTransform::RotateByBasis(EBasisVectorType _type, const float & _angle)
 {
-	D3DXQUATERNION quatRot;
-	D3DXQuaternionRotationAxis(&quatRot, &GetBasis(_type), _angle);
+	JSVECTOR quatRot;
+	quatRot = XMQuaternionRotationAxis(GetBasis(_type).v, _angle);
 	m_qRotation *= quatRot;
 }
 
-void JSTransform::RotateByAxis(const D3DXVECTOR3 & _axis, const float & _angle)
+void JSTransform::RotateByAxis(const JSVECTOR & _axis, const float & _angle)
 {
-	D3DXQUATERNION quatRot;
-	D3DXQuaternionRotationAxis(&quatRot, &_axis, _angle);
+	JSVECTOR quatRot;
+	quatRot = XMQuaternionRotationAxis(_axis.v, _angle);
 	m_qRotation *= quatRot;
 }
 
-const D3DXMATRIX* JSTransform::GetWorld()
+const JSMATRIX* JSTransform::GetWorld()
 {
 	return &m_matWorld;
 }
 
-const D3DXVECTOR3* JSTransform::GetScale()
+const JSVECTOR* JSTransform::GetScale()
 {
 	return &m_vScale;
 }
 
-const D3DXVECTOR3* JSTransform::GetPosition()
+const JSVECTOR* JSTransform::GetPosition()
 {
 	return &m_vPosition;
 }
 
-const D3DXQUATERNION* JSTransform::GetRotation()
+const JSVECTOR* JSTransform::GetRotation()
 {
 	return &m_qRotation;
 }
 
-const D3DXVECTOR3 JSTransform::GetBasis(EBasisVectorType _type)
+const JSVECTOR JSTransform::GetBasis(EBasisVectorType _type)
 {
-	D3DXVECTOR3 returnVector;
-	D3DXVec3Normalize(&returnVector, (D3DXVECTOR3*)m_matWorld.m[(int)_type]);
+	JSVECTOR returnVector;
+	returnVector = XMVector3Normalize(m_matWorld.r[(int)_type]);
 	return returnVector;
 }
 
 const float JSTransform::GetAngle(EBasisVectorType _type)
 {
-	return ((float*)MatrixToEuler(m_matWorld))[(int)_type];
+	return MatrixToEuler(m_matWorld).f[(int)_type];
 }
 
 void JSTransform::GenerateWorldMatrix()
 {
-	D3DXMATRIX matScale;
-	D3DXMATRIX matRot;
-	D3DXMATRIX matTrans;
+	JSMATRIX matScale;
+	JSMATRIX matRot;
+	JSMATRIX matTrans;
 
-	D3DXMatrixTranslation(&matTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-	D3DXMatrixScaling(&matScale, m_vScale.x, m_vScale.y, m_vScale.z);
-	D3DXMatrixRotationQuaternion(&matRot, &m_qRotation);
+	matScale = XMMatrixScalingFromVector(m_vScale);
+	matRot = XMMatrixRotationQuaternion(m_qRotation.v);
+	matTrans = XMMatrixTranslationFromVector(m_vPosition);
 
+	//m_matWorld = XMMatrixScalingFromVector(m_vScale) * XMMatrixRotationQuaternion(m_qRotation.v) * XMMatrixTranslationFromVector(m_vPosition);
 	m_matWorld = matScale * matRot * matTrans;
 }

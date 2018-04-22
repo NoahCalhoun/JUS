@@ -1,9 +1,40 @@
-float4 VS(float4 pos : POSITION) : SV_POSITION
+cbuffer ViewProjectMatrix : register(b0)
 {
-	return pos;
+	matrix gMtxView : packoffset(c0);
+	matrix gMtxProject : packoffset(c4);
+};
+
+cbuffer WorldMatrix : register(b1)
+{
+	matrix gMtxWorld : packoffset(c0);
 }
 
-float4 PS(float4 pos : SV_POSITION) : SV_Target
+Texture2D Texture : register(t0);
+SamplerState Sampler : register(s0);
+
+struct VS_IN
 {
-	return float4(1.f, 1.f, 0.f, 1.f);
+	float3 position : POSITION;
+	float2 uv : TEXCOORD0;
+};
+
+struct VS_OUT
+{
+	float4 position : SV_POSITION;
+	float2 ex : TEXCOORD0;
+};
+
+VS_OUT VS(VS_IN vs_in)
+{
+	VS_OUT value = (VS_OUT)0;
+	value.position = mul(float4(vs_in.position, 1), gMtxWorld);
+	value.position = mul(value.position, gMtxView);
+	value.position = mul(value.position, gMtxProject);
+	value.ex = vs_in.uv;
+	return value;
+}
+
+float4 PS(VS_OUT vs_out) : SV_Target
+{
+	return Texture.Sample(Sampler, vs_out.ex);
 }

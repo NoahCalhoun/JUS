@@ -16,9 +16,6 @@
     <Filter Include="Main\Manager">
       <UniqueIdentifier>{10c9886a-9a59-4d8c-a287-38e6e704b752}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Main\Test">
-      <UniqueIdentifier>{4a2484ce-63a4-4f18-b28d-bc071028aa06}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Main\Resources">
       <UniqueIdentifier>{a6af1237-392f-4c9e-bf2a-aff735c4ede5}</UniqueIdentifier>
     </Filter>
@@ -60,23 +57,20 @@
     <ClInclude Include="Codes\TimeManager.h">
       <Filter>Main\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Codes\TestMesh.h">
-      <Filter>Main\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="Codes\TestObject.h">
-      <Filter>Main\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="Codes\TestShader.h">
-      <Filter>Main\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="Codes\TestScene.h">
-      <Filter>Main\Test</Filter>
-    </ClInclude>
     <ClInclude Include="Codes\Transform.h">
       <Filter>Main\JSComponent</Filter>
     </ClInclude>
     <ClInclude Include="Codes\JSObjectBase.hpp">
       <Filter>Main\JSObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\Camera.h">
+      <Filter>Main\JSComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\RenderManager.h">
+      <Filter>Main\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\Renderer.h">
+      <Filter>Main\JSComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -98,19 +92,16 @@
     <ClCompile Include="Client.cpp">
       <Filter>Default</Filter>
     </ClCompile>
-    <ClCompile Include="Codes\TestMesh.cpp">
-      <Filter>Main\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="Codes\TestObject.cpp">
-      <Filter>Main\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="Codes\TestShader.cpp">
-      <Filter>Main\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="Codes\TestScene.cpp">
-      <Filter>Main\Test</Filter>
-    </ClCompile>
     <ClCompile Include="Codes\Transform.cpp">
+      <Filter>Main\JSComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\Camera.cpp">
+      <Filter>Main\JSComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\RenderManager.cpp">
+      <Filter>Main\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\Renderer.cpp">
       <Filter>Main\JSComponent</Filter>
     </ClCompile>
   </ItemGroup>

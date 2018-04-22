@@ -6,6 +6,8 @@ enum class EComponentType : INT8
 {
 	Base = -1,
 	Transform,
+	Camera,
+	Renderer,
 };
 
 class JSComponentBase abstract
@@ -15,54 +17,41 @@ protected:
 public:
 	virtual ~JSComponentBase() {}
 
-	shared_ptr<class JSObjectBase> m_pOwner;
-	virtual void UpdateComponent() = 0;
+	class JSObjectBase* m_pOwner;
 
+#pragma region Override
 	static EComponentType GetType() { return EComponentType::Base; }
+	static shared_ptr<JSComponentBase> Create() { return nullptr; }
+	virtual void InitComponent() {}
+	virtual void UpdateComponent() = 0;
+#pragma endregion
 };
 
-class JSObjectBase abstract
+class JSObjectBase
 {
 protected:
-	explicit JSObjectBase() {}
+	explicit JSObjectBase() : m_bEnable(true) {}
 public:
-	virtual ~JSObjectBase() { if (m_pSelf) m_pSelf.reset(); }
+	virtual ~JSObjectBase() {}
 
 protected:
 	typedef unordered_map<EComponentType, shared_ptr<JSComponentBase>> COMPONENT;
 	COMPONENT m_mapComponent;
+	bool m_bEnable;
 
-	virtual bool InitObject() { return false; }
+	virtual bool InitObject() { return true; }
 	virtual void ReleaseObject() { m_mapComponent.clear(); }
 
 public:
-	shared_ptr<JSObjectBase> m_pSelf;
+	static shared_ptr<JSObjectBase> Create() { shared_ptr<JSObjectBase> value(new JSObjectBase()); return value; }
 
-	//template <typename T> static shared_ptr<T> Create();
-
-	virtual void Update() { for (auto iterator : m_mapComponent) iterator.second->UpdateComponent(); }
+	virtual void Update() { if (!m_bEnable) return; for (auto iterator : m_mapComponent) iterator.second->UpdateComponent(); }
+	bool IsEnable() { return m_bEnable; }
 
 	template <typename T> shared_ptr<T> AddComponent(shared_ptr<T> _component = nullptr);
 
 	template <typename T> shared_ptr<T> GetComponent();
 };
-
-//template<typename T>
-//inline shared_ptr<T> JSObjectBase::Create()
-//{
-//	shared_ptr<T> pObject(new T);
-//	if (auto baseObject = dynamic_pointer_cast<JSObjectBase>(pObject))
-//	{
-//		baseObject->m_pSelf = baseObject;
-//		baseObject->Begin();
-//		return pObject;
-//	}
-//	else
-//	{
-//		pObject.reset();
-//		return NULL;
-//	}
-//}
 
 template<typename T>
 inline shared_ptr<T> JSObjectBase::AddComponent(shared_ptr<T> _component)
@@ -74,9 +63,9 @@ inline shared_ptr<T> JSObjectBase::AddComponent(shared_ptr<T> _component)
 	if (!_component)
 		_component = T::Create();
 
-	_component->m_pOwner = m_pSelf;
-	_component->InitComponent();
+	_component->m_pOwner = this;
 	m_mapComponent.insert(COMPONENT::value_type(T::GetType(), _component));
+	_component->InitComponent();
 
 	return _component;
 }
