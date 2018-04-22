@@ -99,14 +99,14 @@ void JSTransform::RotateByBasis(EBasisVectorType _type, const float & _angle)
 {
 	JSVECTOR quatRot;
 	quatRot = XMQuaternionRotationAxis(GetBasis(_type).v, _angle);
-	m_qRotation *= quatRot;
+	m_qRotation = XMQuaternionMultiply(m_qRotation.v, quatRot.v);
 }
 
 void JSTransform::RotateByAxis(const JSVECTOR & _axis, const float & _angle)
 {
 	JSVECTOR quatRot;
 	quatRot = XMQuaternionRotationAxis(_axis.v, _angle);
-	m_qRotation *= quatRot;
+	m_qRotation = XMQuaternionMultiply(m_qRotation.v, quatRot.v);
 }
 
 const JSMATRIX* JSTransform::GetWorld()
@@ -151,6 +151,5 @@ void JSTransform::GenerateWorldMatrix()
 	matRot = XMMatrixRotationQuaternion(m_qRotation.v);
 	matTrans = XMMatrixTranslationFromVector(m_vPosition);
 
-	//m_matWorld = XMMatrixScalingFromVector(m_vScale) * XMMatrixRotationQuaternion(m_qRotation.v) * XMMatrixTranslationFromVector(m_vPosition);
 	m_matWorld = matScale * matRot * matTrans;
 }

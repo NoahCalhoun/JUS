@@ -28,4 +28,20 @@ public:
 	ID3D11Buffer* m_pConstantBuffer;
 	ID3D11ShaderResourceView* m_pResourceView;
 	shared_ptr<class JSTransform> m_pTransform;
+
+public:
+	bool operator<(const JSRenderer& other)
+	{
+		if (m_eShaderType < other.m_eShaderType)
+			return true;
+		else if (m_eShaderType > other.m_eShaderType)
+			return false;
+
+		if (m_eCenterType < other.m_eCenterType)
+			return true;
+		else if (m_eCenterType > other.m_eCenterType)
+			return false;
+
+		return true;
+	};
 };

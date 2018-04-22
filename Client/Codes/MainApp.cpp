@@ -44,9 +44,11 @@ void CMainApp::InitDevice()
 
 	m_pObject = JSObjectBase::Create();
 	auto trans = m_pObject->AddComponent<JSTransform>();
+	trans->SetScale(2.f);
+	trans->RotateByBasis(EBasisVectorType::Front, XMConvertToRadians(60.f));
 	auto renderer = m_pObject->AddComponent<JSRenderer>();
 	renderer->SetLayer(RenderLayer::CHARACTER);
-	renderer->SetRenderType(ShaderType::TEXTURE_UV, CenterType::FOOT, RasterizerType::SOLID_AND_CULLNONE, SamplerType::LINEAR);
+	renderer->SetRenderType(ShaderType::TEXTURE_UV, CenterType::BODY, RasterizerType::SOLID_AND_CULLNONE, SamplerType::LINEAR);
 	JSRenderManager::GetInstance()->AddRenderer(renderer);
 }
 

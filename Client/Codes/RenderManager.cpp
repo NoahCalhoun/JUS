@@ -46,6 +46,7 @@ void JSRenderManager::InitializeManager()
 	CurrentShaderType = ShaderType::NONE;
 	CurrentCenterType = CenterType::NONE;
 	CurrentRasterizerType = RasterizerType::NONE;
+	CurrentSamplerType = SamplerType::NONE;
 
 	auto pd3dDevice = CGraphicDevice::GetInstance()->GetDevice();
 
@@ -83,6 +84,30 @@ void JSRenderManager::InitializeManager()
 	d3dBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	d3dBufferDesc.CPUAccessFlags = 0;
 	D3D11_SUBRESOURCE_DATA d3dBufferData;
+	ZeroMemory(&d3dBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
+	d3dBufferData.pSysMem = vtx;
+	pd3dDevice->CreateBuffer(&d3dBufferDesc, &d3dBufferData, &vertex->VertexBuffer);
+	vertex->PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	vertex->Vertices = 6;
+	vertex->Stride = sizeof(Vertex);
+	vertex->Offset = 0;
+	m_mapVertexBuffer[centerType] = vertex;
+
+	centerType = CenterType::BODY;
+	vertex = new VertexSet();
+
+	vtx[0].Position = XMFLOAT3(-0.5f, 0.5f, 0.f);	vtx[0].Texcoord = XMFLOAT2(0.f, 0.f);
+	vtx[1].Position = XMFLOAT3(0.5f, 0.5f, 0.f);	vtx[1].Texcoord = XMFLOAT2(1.f, 0.f);
+	vtx[2].Position = XMFLOAT3(-0.5f, -0.5f, 0.f);	vtx[2].Texcoord = XMFLOAT2(0.f, 1.f);
+	vtx[3].Position = XMFLOAT3(-0.5f, -0.5f, 0.f);	vtx[3].Texcoord = XMFLOAT2(0.f, 1.f);
+	vtx[4].Position = XMFLOAT3(0.5f, 0.5f, 0.f);	vtx[4].Texcoord = XMFLOAT2(1.f, 0.f);
+	vtx[5].Position = XMFLOAT3(0.5f, -0.5f, 0.f);	vtx[5].Texcoord = XMFLOAT2(1.f, 1.f);
+
+	ZeroMemory(&d3dBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	d3dBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	d3dBufferDesc.ByteWidth = sizeof(Vertex) * 6;
+	d3dBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	d3dBufferDesc.CPUAccessFlags = 0;
 	ZeroMemory(&d3dBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
 	d3dBufferData.pSysMem = vtx;
 	pd3dDevice->CreateBuffer(&d3dBufferDesc, &d3dBufferData, &vertex->VertexBuffer);
@@ -172,6 +197,7 @@ void JSRenderManager::AddRenderer(shared_ptr<JSRenderer> renderer)
 	if (findIter != m_mapRenderer.end())
 	{
 		findIter->second.push_back(renderer);
+		findIter->second.sort();
 	}
 	else
 	{
